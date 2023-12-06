@@ -28,6 +28,7 @@ import logging
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
+from datetime import time
 
 # Enable logging
 logging.basicConfig(
@@ -74,7 +75,9 @@ async def set_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
         job_removed = remove_job_if_exists(str(chat_id), context)
         # context.job_queue.run_once(alarm, due, chat_id=chat_id, name=str(chat_id), data=due)
-        context.job_queue.run_repeating(alarm, interval=due, first=10, chat_id=chat_id, name=str(chat_id), data=due)
+        # context.job_queue.run_repeating(alarm, interval=due, first=10, chat_id=chat_id, name=str(chat_id), data=due)
+        t = time(10,int(due),0)
+        context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=due)
 
         text = "Interval successfully set!"
         if job_removed:
