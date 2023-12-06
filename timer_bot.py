@@ -29,6 +29,9 @@ import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import time
+from pytz import timezone
+
+riga = timezone("Europe/Riga")
 
 # Enable logging
 logging.basicConfig(
@@ -44,13 +47,13 @@ logging.basicConfig(
 # we decided to have it present as context.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
-    await update.message.reply_text("Hi! Use /set <seconds> to set an interval for the messages.\nUse /unset to stop the messages")
+    await update.message.reply_text("Hi! Use /set <hour> <minute> to set a time for the messages.\nUse /unset to stop the messages.")
 
 
 async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send the alarm message."""
     job = context.job
-    await context.bot.send_message(job.chat_id, text=f"Beep! {job.data} seconds have passed!")
+    await context.bot.send_message(job.chat_id, text=f"Beep! Good morning, {job.data}!")
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -63,36 +66,38 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     return True
 
 
-async def set_timer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def set_message_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Add a job to the queue."""
     chat_id = update.effective_message.chat_id
     try:
-        # args[0] should contain the time for the timer in seconds
-        due = float(context.args[0])
-        if due < 0:
-            await update.effective_message.reply_text("Sorry we can not travel in time!")
+        # args[0] should contain the hours for the message
+        # args[1] should contain the minutes
+        hour = int(context.args[0])
+        minute = int(context.args[1])
+        if hour < 0 or minute < 0:
+            await update.effective_message.reply_text("Sorry, but we can not travel in time!")
             return
 
         job_removed = remove_job_if_exists(str(chat_id), context)
-        # context.job_queue.run_once(alarm, due, chat_id=chat_id, name=str(chat_id), data=due)
-        # context.job_queue.run_repeating(alarm, interval=due, first=10, chat_id=chat_id, name=str(chat_id), data=due)
-        t = time(10,int(due),0)
-        context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=due)
 
-        text = "Interval successfully set!"
+        t = time(hour, minute, 0, tzinfo=riga)
+        first_name = update.effective_message.chat.first_name
+        context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
+
+        text = "Time successfully set!"
         if job_removed:
-            text += " Old one was removed."
+            text += " Old schedule was removed."
         await update.effective_message.reply_text(text)
 
     except (IndexError, ValueError):
-        await update.effective_message.reply_text("Usage: /set <seconds>")
+        await update.effective_message.reply_text("Usage: /set <hour> <minute>")
 
 
 async def unset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Remove the job if the user changed their mind."""
     chat_id = update.message.chat_id
     job_removed = remove_job_if_exists(str(chat_id), context)
-    text = "Messages successfully cancelled!" if job_removed else "You have no active interval for messages."
+    text = "Messages successfully cancelled!" if job_removed else "You have not set a time for messages."
     await update.message.reply_text(text)
 
 
@@ -103,7 +108,7 @@ def main() -> None:
 
     # on different commands - answer in Telegram
     application.add_handler(CommandHandler(["start", "help"], start))
-    application.add_handler(CommandHandler("set", set_timer))
+    application.add_handler(CommandHandler("set", set_message_time))
     application.add_handler(CommandHandler("unset", unset))
 
     # Run the bot until the user presses Ctrl-C
