@@ -1,25 +1,7 @@
 #!/usr/bin/env python
-# pylint: disable=unused-argument
-# This program is dedicated to the public domain under the CC0 license.
 
 """
-Simple Bot to send timed Telegram messages.
-
-This Bot uses the Application class to handle the bot and the JobQueue to send
-timed messages.
-
-First, a few handler functions are defined. Then, those functions are passed to
-the Application and registered at their respective places.
-Then, the bot is started and runs until we press Ctrl-C on the command line.
-
-Usage:
-Basic Alarm Bot example, sends a message after a set time.
-Press Ctrl-C on the command line or send a signal to the process to stop the
-bot.
-
-Note:
-To use the JobQueue, you must install PTB via
-`pip install "python-telegram-bot[job-queue]"`
+Simple Bot to send "good morning" messages at the specified time.
 """
 
 TOKEN = "6978009192:AAFTAd8jjcmTI4F5aQM4OZP4EIyMKbNeHJ4"
@@ -39,12 +21,7 @@ logging.basicConfig(
 )
 
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
-# Best practice would be to replace context with an underscore,
-# since context is an unused local variable.
-# This being an example and not having context present confusing beginners,
-# we decided to have it present as context.
+# Define a few command handlers.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
     await update.message.reply_text("Hi! Use /set <hour> <minute> to set a time for the messages.\nUse /unset to stop the messages.")
