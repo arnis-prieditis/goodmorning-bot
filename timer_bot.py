@@ -9,6 +9,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import time
 from pytz import timezone
+import csv
 
 # set the time zone for messages
 riga = timezone("Europe/Riga")
@@ -43,6 +44,15 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
         return False
     for job in current_jobs:
         job.schedule_removal()
+    new_rows = []
+    with open("running_jobs.csv", "r") as running_jobs_file:
+        csv_reader = csv.reader(running_jobs_file)
+        for row in csv_reader:
+            if row[0] != name:
+                new_rows.append(row)
+    with open("running_jobs.csv", "w", newline="") as running_jobs_file:
+        csv_writer = csv.writer(running_jobs_file)
+        csv_writer.writerows(new_rows)
     return True
 
 
@@ -63,6 +73,11 @@ async def set_message_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         t = time(hour, minute, 0, tzinfo=riga)
         first_name = update.effective_message.chat.first_name
         context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
+
+        new_row = [chat_id, first_name, t]
+        with open("running_jobs.csv", "a", newline="") as running_jobs_file:
+            csv_writer = csv.writer(running_jobs_file)
+            csv_writer.writerow(new_row)
 
         text = "Time successfully set!"
         if job_removed:
