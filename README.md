@@ -4,4 +4,5 @@
 ## TODO 
 - the messages (or parts of them) could be randomized
 - maybe some goodbye message when the bot is shutdown (so that the user knows to reset the time)
+- ^ or alternatively store all running daily jobs in a cvs/json file and start running them again on startup
 - make so that the bot adapts to the user's local time zone
