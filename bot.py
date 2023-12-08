@@ -108,7 +108,15 @@ def main() -> None:
     application.add_handler(CommandHandler("set", set_message_time))
     application.add_handler(CommandHandler("unset", unset))
 
-
+    # continue the previously set jobs
+    with open(path_to_csv, "r") as running_jobs_file:
+        csv_reader = csv.reader(running_jobs_file)
+        for row in csv_reader:
+            chat_id = row[0]
+            first_name = row[1]
+            time_digits = list(map(lambda x : int(x), row[2].split(":")))
+            t = time(time_digits[0], time_digits[1], 0, tzinfo=riga)
+            application.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling(allowed_updates=Update.ALL_TYPES)
