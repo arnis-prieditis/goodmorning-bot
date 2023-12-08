@@ -25,6 +25,8 @@ with open("token.txt", "r") as token_file:
     TOKEN = token_file.readline()
     TOKEN.strip()
 
+path_to_csv = "running_jobs.csv"
+
 # Define a few command handlers.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
@@ -45,12 +47,12 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
     for job in current_jobs:
         job.schedule_removal()
     new_rows = []
-    with open("running_jobs.csv", "r") as running_jobs_file:
+    with open(path_to_csv, "r") as running_jobs_file:
         csv_reader = csv.reader(running_jobs_file)
         for row in csv_reader:
             if row[0] != name:
                 new_rows.append(row)
-    with open("running_jobs.csv", "w", newline="") as running_jobs_file:
+    with open(path_to_csv, "w", newline="") as running_jobs_file:
         csv_writer = csv.writer(running_jobs_file)
         csv_writer.writerows(new_rows)
     return True
@@ -75,7 +77,7 @@ async def set_message_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
 
         new_row = [chat_id, first_name, t]
-        with open("running_jobs.csv", "a", newline="") as running_jobs_file:
+        with open(path_to_csv, "a", newline="") as running_jobs_file:
             csv_writer = csv.writer(running_jobs_file)
             csv_writer.writerow(new_row)
 
@@ -105,6 +107,8 @@ def main() -> None:
     application.add_handler(CommandHandler(["start", "help"], start))
     application.add_handler(CommandHandler("set", set_message_time))
     application.add_handler(CommandHandler("unset", unset))
+
+
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling(allowed_updates=Update.ALL_TYPES)
