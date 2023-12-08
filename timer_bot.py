@@ -4,15 +4,13 @@
 Simple Bot to send "good morning" messages at the specified time.
 """
 
-TOKEN = "6978009192:AAFTAd8jjcmTI4F5aQM4OZP4EIyMKbNeHJ4"
-
 import logging
-
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import time
 from pytz import timezone
 
+# set the time zone for messages
 riga = timezone("Europe/Riga")
 
 # Enable logging
@@ -20,6 +18,11 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
+# Get bot token
+TOKEN = ""
+with open("token.txt", "r") as token_file:
+    TOKEN = token_file.readline()
+    TOKEN.strip()
 
 # Define a few command handlers.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
