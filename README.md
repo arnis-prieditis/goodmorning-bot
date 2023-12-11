@@ -1,5 +1,5 @@
 # Good-morning-bot
-- sends 'good morning' messages every day at the use specified time
+- sends 'good morning' messages every day at the user specified time
 - the token for the bot must be stored in a file "token.txt" in plain text in the same directory as the script
 - saves running jobs in a csv file "running_jobs.csv" and restarts them after downtime
 ## TODO 
