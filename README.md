@@ -1,7 +1,30 @@
 # Good-morning-bot
+
 - sends 'good morning' messages every day at the user specified time
 - the token for the bot must be stored in a file "token.txt" in plain text in the same directory as the script
 - saves running jobs in a csv file "running_jobs.csv" and restarts them after downtime
+
+## current pros
+
+- the user can control the time of the message and cancel/re-enable messaging at any moment
+- can work for multiple users at once
+
+## current cons
+
+- probably more resource intensive
+
+## alternative
+
+Make a script that sends one randomized message.
+
+Set up a cron job for that script.
+
+The downside of that approach is that I have to manually set up the
+target user's ID and messaging time. And the user has no control 
+over the bot.
+
 ## TODO 
-- the messages (or parts of them) could be randomized
-- make so that the bot adapts to the user's local time zone
+
+- randomize messages with novēlējumi or inspirational quotes
+- make so that the bot adapts to the user's local time zone (for current variant)
+- talk to target user about the best bot version
