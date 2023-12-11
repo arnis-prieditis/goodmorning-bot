@@ -13,7 +13,7 @@
 
 - probably more resource intensive
 
-## alternative
+## alternative 1
 
 Make a script that sends one randomized message.
 
@@ -22,6 +22,12 @@ Set up a cron job for that script.
 The downside of that approach is that I have to manually set up the
 target user's ID and messaging time. And the user has no control 
 over the bot.
+
+## alternative 2
+
+Use `tmux` to run and kill the current bot.
+
+Set up 2 cronjobs for making a new session and killing it (e.g. one at 05:00, one at 12:00)
 
 ## TODO 
 
