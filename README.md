@@ -27,7 +27,11 @@ over the bot.
 
 Use `tmux` to run and kill the current bot.
 
-Set up 2 cronjobs for making a new session and killing it (e.g. one at 05:00, one at 12:00)
+Set up 2 cronjobs for making a new session and killing it:
+
+`0 5 * * * tmux new-session -d -s gm_bot "python3 bot.py"`
+
+`0 12 * * * tmux kill-session -t gm_bot`
 
 The only downside would be that the user cannot immediately see the results 
 of set and unset commands outside of that time interval. Everything will be
