@@ -67,12 +67,18 @@ async def set_message_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         hour = int(context.args[0])
         minute = int(context.args[1])
         if hour < 0 or minute < 0:
-            await update.effective_message.reply_text("Sorry, but we can not travel in time!")
+            await update.effective_message.reply_text("Sorry, but we can not bend time!")
+            return
+
+        t = time(hour, minute, 0, tzinfo=riga)
+        t_upper = time(12, 0, 0)
+        t_lower = time(5, 0, 0)
+        if t > t_upper or t < t_lower:
+            await update.effective_message.reply_text("Sorry, but those aren't my morning hours. Please, set a time between 5:00 and 12:00")
             return
 
         job_removed = remove_job_if_exists(str(chat_id), context)
 
-        t = time(hour, minute, 0, tzinfo=riga)
         first_name = update.effective_message.chat.first_name
         context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
 

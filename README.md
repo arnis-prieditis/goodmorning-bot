@@ -29,6 +29,10 @@ Use `tmux` to run and kill the current bot.
 
 Set up 2 cronjobs for making a new session and killing it (e.g. one at 05:00, one at 12:00)
 
+The only downside would be that the user cannot immediately see the results 
+of set and unset commands outside of that time interval. Everything will be
+processed at once when the bot script is run again. 
+
 ## TODO 
 
 - randomize messages with novēlējumi or inspirational quotes
