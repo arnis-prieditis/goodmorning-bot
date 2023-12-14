@@ -10,6 +10,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import time
 from pytz import timezone
 import csv
+import random
 
 # set the time zone for messages
 riga = timezone("Europe/Riga")
@@ -30,13 +31,14 @@ path_to_csv = "running_jobs.csv"
 # Define a few command handlers.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
-    await update.message.reply_text("Hi! Use /set <hour> <minute> to set a time for the messages.\nUse /unset to stop the messages.")
+    await update.message.reply_text("Hi! Use /set <hour> <minute> to set a time for my messages.\nUse /unset to stop the messages.")
 
 
 async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send the alarm message."""
     job = context.job
-    await context.bot.send_message(job.chat_id, text=f"Beep! Good morning, {job.data}!")
+    who = (random.choices([job.data, "sweetie", "sweetheart"], weights=[10,1,1]))[0]
+    await context.bot.send_message(job.chat_id, text=f"Beep! Good morning, {who}!")
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -121,7 +123,7 @@ def main() -> None:
             chat_id = row[0]
             first_name = row[1]
             time_digits = list(map(lambda x : int(x), row[2].split(":")))
-            t = time(time_digits[0], time_digits[1], 0, tzinfo=riga)
+            t = time(time_digits[0], time_digits[1], time_digits[2], tzinfo=riga)
             application.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
 
     # Run the bot until the user presses Ctrl-C
