@@ -28,6 +28,11 @@ with open("token.txt", "r") as token_file:
 
 path_to_csv = "running_jobs.csv"
 
+novelejumi = []
+with open("novelejumi.txt", "r") as novelejumi_file:
+    for row in novelejumi_file:
+        novelejumi.append(row)
+
 # Define a few command handlers.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
@@ -38,7 +43,8 @@ async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send the alarm message."""
     job = context.job
     who = (random.choices([job.data, "sweetie", "sweetheart"], weights=[10,1,1]))[0]
-    await context.bot.send_message(job.chat_id, text=f"Beep! Good morning, {who}!")
+    bonus_sentence = (random.choices(novelejumi))[0]
+    await context.bot.send_message(job.chat_id, text=f"Good morning, {who}! {bonus_sentence}")
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
