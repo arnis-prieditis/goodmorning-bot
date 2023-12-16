@@ -11,6 +11,9 @@ from datetime import time
 from pytz import timezone
 import csv
 import random
+import os
+
+proj_dir = os.path.dirname(os.path.abspath(__file__))
 
 # set the time zone for messages
 riga = timezone("Europe/Riga")
@@ -22,14 +25,16 @@ logging.basicConfig(
 
 # Get bot token
 TOKEN = ""
-with open("token.txt", "r") as token_file:
+path_to_token = proj_dir + "/token.txt"
+with open(path_to_token, "r") as token_file:
     TOKEN = token_file.readline()
     TOKEN.strip()
 
-path_to_csv = "running_jobs.csv"
+path_to_csv = proj_dir + "/running_jobs.csv"
 
 novelejumi = []
-with open("novelejumi.txt", "r") as novelejumi_file:
+path_to_novelejumi = proj_dir + "/novelejumi.txt"
+with open(path_to_novelejumi, "r") as novelejumi_file:
     for row in novelejumi_file:
         novelejumi.append(row)
 
