@@ -1,44 +1,34 @@
 # Good-morning-bot
 
-- sends 'good morning' messages every day at the user specified time
+- sends 'good morning' messages every day
 - the token for the bot must be stored in a file "token.txt" in plain text in the same directory as the script
 - saves running jobs in a csv file "running_jobs.csv" and restarts them after downtime
+- randomized bonus sentences are stored in "novelejumi.txt"
 
-## current pros
+## auto_bot.py
 
-- the user can control the time of the message and cancel/re-enable messaging at any moment
-- can work for multiple users at once
+The simpler bot version. The user can start and stop messaging.
+When messaging is started, a random time between 7:00 and 7:59 
+is generated for that user. The time will stay the same unless
+/start command is used again.
 
-## current cons
+## bot.py
 
-- probably more resource intensive
+The user can set a specified time for messages with
+"/set <hour> <minute>"  
 
-## alternative 1
+Otherwise it is the same.
 
-Make a script that sends one randomized message.
+## Automation
 
-Set up a cron job for that script.
+`tmux` is used to run and kill the current bot.
 
-The downside of that approach is that I have to manually set up the
-target user's ID and messaging time. And the user has no control 
-over the bot.
+2 cronjobs for making a new session and killing it:
 
-## alternative 2
+`59 6 * * * tmux new-session -d -s gm_bot "python3 path/to/auto_bot.py"`
 
-Use `tmux` to run and kill the current bot.
+`0 8 * * * tmux kill-session -t gm_bot`
 
-Set up 2 cronjobs for making a new session and killing it:
-
-`0 5 * * * tmux new-session -d -s gm_bot "python3 bot.py"`
-
-`0 12 * * * tmux kill-session -t gm_bot`
-
-The only downside would be that the user cannot immediately see the results 
-of set and unset commands outside of that time interval. Everything will be
+The only downside is that the user cannot immediately see the results 
+of the commands outside of that time interval. Everything will be
 processed at once when the bot script is run again. 
-
-## TODO 
-
-- randomize messages with novēlējumi or inspirational quotes
-- make so that the bot adapts to the user's local time zone (for current variant)
-- talk to target user about the best bot version
