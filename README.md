@@ -15,7 +15,7 @@ is generated for that user. The time will stay the same unless
 ## bot.py
 
 The user can set a specified time for messages with
-"/set <hour> <minute>"  
+"/set h min"  
 
 Otherwise it is the same.
 
