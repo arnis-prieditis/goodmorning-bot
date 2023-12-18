@@ -31,12 +31,8 @@ with open(path_to_token, "r") as token_file:
     TOKEN.strip()
 
 path_to_csv = proj_dir + "/running_jobs.csv"
-
-novelejumi = []
 path_to_novelejumi = proj_dir + "/novelejumi.txt"
-with open(path_to_novelejumi, "r") as novelejumi_file:
-    for row in novelejumi_file:
-        novelejumi.append(row)
+
 
 # Define a few command handlers.
 async def help_func(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -48,6 +44,10 @@ async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send the alarm message."""
     job = context.job
     who = (random.choices([job.data, "sweetheart"], weights=[25,1]))[0]
+    novelejumi = []
+    with open(path_to_novelejumi, "r") as novelejumi_file:
+        for row in novelejumi_file:
+            novelejumi.append(row)
     bonus_sentence = (random.choices(novelejumi))[0]
     await context.bot.send_message(job.chat_id, text=f"Good morning, {who}! {bonus_sentence}")
 
