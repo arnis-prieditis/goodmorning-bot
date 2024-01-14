@@ -10,7 +10,9 @@
 The simpler bot version. The user can start and stop messaging.
 When messaging is started, a random time between 7:00 and 7:59 
 is generated for that user. The time will stay the same unless
-/start command is used again.
+/start command is used again.  
+Can sometimes send memes, which must be put into a folder named
+"memes" 
 
 ## bot.py
 

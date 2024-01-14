@@ -50,6 +50,15 @@ async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
             novelejumi.append(row)
     bonus_sentence = (random.choices(novelejumi))[0]
     await context.bot.send_message(job.chat_id, text=f"Good morning, {who}! {bonus_sentence}")
+    meme = random.randint(1,7)
+    if meme == 1:
+        meme_files = []
+        for root, dirs, files in os.walk(proj_dir + "/memes"):
+            for file in files:
+                full_path = os.path.join(root, file)
+                meme_files.append(full_path)
+        bonus_meme = (random.choices(meme_files))[0]
+        await context.bot.send_photo(chat_id=job.chat_id, photo=open(bonus_meme, "rb"), caption="Bonus meme")
 
 
 def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
@@ -88,7 +97,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             csv_writer = csv.writer(running_jobs_file)
             csv_writer.writerow(new_row)
 
-        text = "OK, you'll hear from me soon 😁" if not job_removed else "Was already planning on that. But I can schedule a different time for some intrigue."
+        text = "OK, you'll hear from me soon 😁" if not job_removed else "Was already planning on that. But I can schedule a different time 😉"
         await update.effective_message.reply_text(text)
 
     except (IndexError, ValueError):
