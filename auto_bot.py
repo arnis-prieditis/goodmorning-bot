@@ -50,7 +50,7 @@ async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
             novelejumi.append(row)
     bonus_sentence = (random.choices(novelejumi))[0]
     await context.bot.send_message(job.chat_id, text=f"Good morning, {who}! {bonus_sentence}")
-    meme = random.randint(1,7)
+    meme = random.randint(1,4)
     if meme == 1:
         meme_files = []
         for root, dirs, files in os.walk(proj_dir + "/memes"):
