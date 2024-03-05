@@ -50,7 +50,7 @@ async def alarm(context: ContextTypes.DEFAULT_TYPE) -> None:
             novelejumi.append(row)
     bonus_sentence = (random.choices(novelejumi))[0]
     await context.bot.send_message(job.chat_id, text=f"Good morning, {who}! {bonus_sentence}")
-    meme = random.randint(1,4)
+    meme = random.randint(1,2)
     if meme == 1:
         meme_files = []
         for root, dirs, files in os.walk(proj_dir + "/memes"):
@@ -87,8 +87,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         first_name = update.effective_message.chat.first_name
         job_removed = remove_job_if_exists(str(chat_id), context)
 
-        # will pick a random time between 7:00 and 7:59
-        minute = random.randint(0, 59)
+        # will pick a random time between 7:00 and 7:30
+        minute = random.randint(0, 30)
         t = time(7, minute, 0, tzinfo=riga)
         context.job_queue.run_daily(alarm, time=t, chat_id=chat_id, name=str(chat_id), data=first_name)
 
